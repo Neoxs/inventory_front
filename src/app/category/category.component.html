@@ -1,0 +1,301 @@
+<div class="main_container">
+  <div class="main_sidebar">
+    <div class="sidebar__logo">
+      <h2>Inventory.</h2>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__nav-item">
+        <a routerLink="/home" routerLinkActive="active">
+          <i class="fas fa-house"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a routerLink="/items" routerLinkActive="active">
+          <i class="fas fa-boxes"></i>
+          <span>Items</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item sidebar__nav-item--active">
+        <a routerLink="/categories" routerLinkActive="active">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Categories</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="main_view">
+    <div class="main__navbar">
+      <div class="main__searchbox">
+        <input
+          class="main__searchbox-input"
+          type="search"
+          name="search"
+          placeholder="search..."
+        />
+      </div>
+      <div class="user-nav">
+        <div class="user-nav__iconbox">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="user-nav__user">
+          <div class="user-nav__user-info">
+            <span class="user-nav__user-info--name">Yacine Kharoubi</span>
+            <span class="user-nav__user-info--link">Manager</span>
+          </div>
+          <img
+            src="assets/images.jpeg"
+            alt="User pic"
+            class="user-nav__user-photo"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="main__heading">
+      <h3 class="main__heading-title">Categories 🗃</h3>
+      <button
+        class="main__heading-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Add Category
+      </button>
+    </div>
+
+    <div class="container">
+      <table class="table dataTable">
+        <thead class="dataTable__header">
+          <tr>
+            <th
+              class="dataTable__header-title dataTable__header-title--id"
+              scope="col"
+            >
+              #
+            </th>
+            <th class="dataTable__header-title" scope="col">Title</th>
+            <th class="dataTable__header-title" scope="col">nbItems</th>
+            <th class="dataTable__header-title" scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="dataTable__body">
+          <tr
+            class="dataTable__body-row"
+            *ngFor="let category of categories; index as i"
+          >
+            <th
+              class="dataTable__body-item dataTable__body-item--id"
+              scope="row"
+            >
+              {{ category._id }}
+            </th>
+            <td class="dataTable__body-item">{{ category.title }}</td>
+            <td class="dataTable__body-item">{{ category.nbItems }}</td>
+            <td class="dataTable__body-item">
+              <span
+                class="dataTable__icon-box"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+                (click)="toggleEdit(category)"
+                ><i class="fa-solid fa-pen"></i
+              ></span>
+              <span
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal"
+                class="dataTable__icon-box"
+                (click)="toggle(category)"
+                ><i class="fa-solid fa-trash"></i
+              ></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dataTable__illustration" *ngIf="this.categories.length === 0">
+        <img src="assets/searching.svg" alt="no data found" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD Modal -->
+<div
+  class="modal fade main_modal"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="exampleModalLabel">
+          Add Category
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div *ngIf="added" class="alert alert-success" role="alert">
+        Category was added succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="title" class="form-label main_modal-label"
+              >Category title</label
+            >
+            <input
+              type="text"
+              class="form-control main_modal-input"
+              id="text"
+              name="title"
+              aria-describedby="Category..."
+              [formControl]="newCategory.title"
+            />
+            <span *ngIf="newCategory.title?.errors" class="main_modal-error">Please enter a valid category name</span>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--main"
+          [disabled]="newCategory.title?.errors"
+          (click)="createCategory()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade main_modal"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="deleteModalLabel">
+          Delete category
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeDeleteModal()"
+        ></button>
+      </div>
+      <div *ngIf="deleted" class="alert alert-success" role="alert">
+        Category was deleted succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <span class="main_modal-text"
+          >Are you sure you want to delete
+          <b>{{ this.selectedCategory.title }}</b> category ?</span
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeDeleteModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--delete"
+          [disabled]="deleted"
+          (click)="deleteCategory()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div
+  class="modal fade main_modal"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="editModalLabel">
+          Edit Category
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeEditModal()"
+        ></button>
+      </div>
+      <div *ngIf="updated" class="alert alert-success" role="alert">
+        Category was edited succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="title" class="form-label main_modal-label"
+              >Category title</label
+            >
+            <input
+              type="text"
+              class="form-control main_modal-input"
+              id="text"
+              name="title"
+              aria-describedby="Category..."
+              [value]="selectedCategory.title"
+              [formControl]="updatedCategory.title"
+            />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeEditModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--main"
+          [disabled]="updatedCategory.title?.errors || updated"
+          (click)="editCategory()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

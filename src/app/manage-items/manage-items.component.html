@@ -1,0 +1,417 @@
+<div class="main_container">
+  <div class="main_sidebar">
+    <div class="sidebar__logo">
+      <h2>Inventory.</h2>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__nav-item">
+        <a routerLink="/home" routerLinkActive="active">
+          <i class="fas fa-house"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item sidebar__nav-item--active">
+        <a routerLink="/items" routerLinkActive="active">
+          <i class="fas fa-boxes"></i>
+          <span>Items</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a routerLink="/categories" routerLinkActive="active">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Categories</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="main_view">
+    <div class="main__navbar">
+      <div class="main__searchbox">
+        <input
+          class="main__searchbox-input"
+          type="search"
+          name="search"
+          placeholder="search..."
+        />
+      </div>
+      <div class="user-nav">
+        <div class="user-nav__iconbox">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="user-nav__user">
+          <div class="user-nav__user-info">
+            <span class="user-nav__user-info--name">Yacine Kharoubi</span>
+            <span class="user-nav__user-info--link">Manager</span>
+          </div>
+          <img
+            src="assets/images.jpeg"
+            alt="User pic"
+            class="user-nav__user-photo"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="main__heading">
+      <h3 class="main__heading-title">Items 📦</h3>
+      <button
+        class="main__heading-btn"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Add item
+      </button>
+    </div>
+
+    <div class="container">
+      <table class="table dataTable">
+        <thead class="dataTable__header">
+          <tr>
+            <th
+              class="dataTable__header-title dataTable__header-title--id"
+              scope="col"
+            >
+              #
+            </th>
+            <th class="dataTable__header-title" scope="col">Name</th>
+            <th class="dataTable__header-title" scope="col">Category</th>
+            <th class="dataTable__header-title" scope="col">Quantity</th>
+            <th class="dataTable__header-title" scope="col">Price</th>
+            <th class="dataTable__header-title" scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="dataTable__body">
+          <tr
+            class="dataTable__body-row"
+            *ngFor="let item of items; index as i"
+          >
+            <th
+              class="dataTable__body-item dataTable__body-item--id"
+              scope="row"
+            >
+              {{ item._id }}
+            </th>
+            <td class="dataTable__body-item">{{ item.title }}</td>
+            <td class="dataTable__body-item">{{ item.category[0]?.title }}</td>
+            <td class="dataTable__body-item">{{ item.quantity }}</td>
+            <td class="dataTable__body-item">{{ item.price }} dzd</td>
+            <td class="dataTable__body-item">
+              <span
+                class="dataTable__icon-box"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+                (click)="toggleEdit(item)"
+                ><i class="fa-solid fa-pen"></i
+              ></span>
+              <span
+                data-bs-toggle="modal"
+                data-bs-target="#deleteModal"
+                class="dataTable__icon-box"
+                (click)="toggle(item)"
+                ><i class="fa-solid fa-trash"></i
+              ></span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dataTable__illustration" *ngIf="this.items.length === 0">
+        <img src="assets/searching.svg" alt="no data found" />
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ADD Modal -->
+<div
+  class="modal fade main_modal"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="exampleModalLabel">
+          Add Item
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div *ngIf="added" class="alert alert-success" role="alert">
+        Item was added succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="title" class="form-label main_modal-label"
+              >Product title</label
+            >
+            <input
+              type="text"
+              class="form-control main_modal-input"
+              id="text"
+              name="title"
+              aria-describedby="Product..."
+              [formControl]="newItem.title"
+            />
+            <span *ngIf="newItem.title?.errors" class="main_modal-error"
+              >Please enter a valid item title</span
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="quantity" class="form-label main_modal-label"
+              >Product Quantity</label
+            >
+            <input
+              type="number"
+              class="form-control main_modal-input"
+              id="quantity"
+              name="quantity"
+              [formControl]="newItem.quantity"
+            />
+            <span *ngIf="newItem.quantity?.errors" class="main_modal-error"
+              >Quantity should be superior than 1</span
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="price" class="form-label main_modal-label"
+              >Product Price</label
+            >
+            <input
+              type="number"
+              class="form-control main_modal-input"
+              id="price"
+              name="price"
+              [formControl]="newItem.price"
+            />
+            <span *ngIf="newItem.price?.errors" class="main_modal-error"
+              >Quantity should be superior than 1</span
+            >
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label main_modal-label"
+              >Product Category</label
+            >
+            <select
+              class="form-select main_modal-input"
+              aria-label="Default select example"
+              [formControl]="newItem.category"
+            >
+              <option selected>Please select a category</option>
+              <option
+                *ngFor="let category of categories"
+                [value]="category._id"
+              >
+                {{ category.title }}
+              </option>
+            </select>
+            <span *ngIf="newItem.category?.errors" class="main_modal-error"
+              >This field is required</span
+            >
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--main"
+          [disabled]="
+            newItem.title?.errors ||
+            newItem.price?.errors ||
+            newItem.quantity.errors ||
+            added
+          "
+          (click)="addItem()"
+        >
+          Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div
+  class="modal fade main_modal"
+  id="deleteModal"
+  tabindex="-1"
+  aria-labelledby="deleteModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="deleteModalLabel">
+          Delete item
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeDeleteModal()"
+        ></button>
+      </div>
+      <div *ngIf="deleted" class="alert alert-success" role="alert">
+        Item was added succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <span class="main_modal-text"
+          >Are you sure you want to delete <b>{{ selectedItem.title }}</b> item
+          ?</span
+        >
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeDeleteModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--delete"
+          [disabled]="deleted"
+          (click)="deleteItem()"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div
+  class="modal fade main_modal"
+  id="editModal"
+  tabindex="-1"
+  aria-labelledby="editModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title main_modal-title" id="editModalLabel">
+          Edit Item
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+          (click)="closeEditModal()"
+        ></button>
+      </div>
+      <div *ngIf="updated" class="alert alert-success" role="alert">
+        Item was edited succesfuly
+      </div>
+      <div class="modal-body main_modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="title" class="form-label main_modal-label"
+              >Product title</label
+            >
+            <input
+              type="text"
+              class="form-control main_modal-input"
+              id="text"
+              name="title"
+              aria-describedby="Product..."
+              [formControl]="updatedItem.title"
+              [value]="selectedItem.title"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="quantity" class="form-label main_modal-label"
+              >Product Quantity</label
+            >
+            <input
+              type="number"
+              class="form-control main_modal-input"
+              id="quantity"
+              name="quantity"
+              [formControl]="updatedItem.quantity"
+              value={{selectedItem.quantity}}
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="price" class="form-label main_modal-label"
+              >Product Price</label
+            >
+            <input
+              type="number"
+              class="form-control main_modal-input"
+              id="price"
+              name="price"
+              [formControl]="updatedItem.price"
+              [value]="selectedItem.price"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="category" class="form-label main_modal-label"
+              >Product Category</label
+            >
+            <select
+              class="form-select main_modal-input"
+              aria-label="Default select example"
+              [formControl]="updatedItem.category"
+            >
+              <option selected>Please select a category</option>
+              <option
+                *ngFor="let category of categories"
+                [value]="category?._id"
+              >
+                {{ category.title }}
+              </option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-secondary main_modal-btn"
+          data-bs-dismiss="modal"
+          (click)="closeEditModal()"
+        >
+          Close
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary main_modal-btn main_modal-btn--main"
+          [disabled]="
+            updatedItem.title?.errors ||
+            updatedItem.price?.errors ||
+            updatedItem.quantity.errors ||
+            updated
+          "
+          (click)="editItem()"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

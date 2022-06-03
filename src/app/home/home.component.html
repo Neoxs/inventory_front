@@ -1,0 +1,148 @@
+<div class="main_container">
+  <div class="main_sidebar">
+    <div class="sidebar__logo">
+      <h2>Inventory.</h2>
+    </div>
+    <ul class="sidebar__nav">
+      <li class="sidebar__nav-item sidebar__nav-item--active">
+        <a routerLink="/home" routerLinkActive="active">
+          <i class="fas fa-house"></i>
+          <span>Dashboard</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a routerLink="/items" routerLinkActive="active">
+          <i class="fas fa-boxes"></i>
+          <span>Items</span>
+        </a>
+      </li>
+      <li class="sidebar__nav-item">
+        <a routerLink="/categories" routerLinkActive="active">
+          <i class="fas fa-clipboard-list"></i>
+          <span>Categories</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="main_view">
+    <div class="main__navbar">
+      <div class="main__searchbox">
+        <input
+          class="main__searchbox-input"
+          type="search"
+          name="search"
+          placeholder="search..."
+        />
+      </div>
+      <div class="user-nav">
+        <div class="user-nav__iconbox">
+          <i class="fas fa-bell"></i>
+        </div>
+        <div class="user-nav__user">
+          <div class="user-nav__user-info">
+            <span class="user-nav__user-info--name">Yacine Kharoubi</span>
+            <span class="user-nav__user-info--link">Manager</span>
+          </div>
+          <img
+            src="assets/images.jpeg"
+            alt="User pic"
+            class="user-nav__user-photo"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="main__heading">
+      <h3 class="main__heading-title">Dashboard</h3>
+      <a routerLink="/items" routerLinkActive="active"
+        ><button class="main__heading-btn">Manage items</button></a
+      >
+    </div>
+
+    <div class="main__statistics">
+      <div class="statistic__box">
+        <img
+          src="assets/today_box.svg"
+          alt="today box"
+          class="statistic__img"
+        />
+        <div class="statistic__data">
+          <span class="statistic__data-title">Today item's</span>
+          <span class="statistic__data-number">{{ statistics.todayItems }}</span>
+        </div>
+      </div>
+
+      <div class="statistic__box">
+        <img src="assets/week_box.svg" alt="today box" class="statistic__img" />
+        <div class="statistic__data">
+          <span class="statistic__data-title">Week item's</span>
+          <span class="statistic__data-number">{{ statistics.weekItems }}</span>
+        </div>
+      </div>
+
+      <div class="statistic__box">
+        <img
+          src="assets/items.svg"
+          alt="today box"
+          class="statistic__img"
+        />
+        <div class="statistic__data">
+          <span class="statistic__data-title">Total items</span>
+          <span class="statistic__data-number">{{ statistics.todayItems }}</span>
+        </div>
+      </div>
+
+      <div class="statistic__box">
+        <img
+          src="assets/category.svg"
+          alt="today box"
+          class="statistic__img"
+        />
+        <div class="statistic__data">
+          <span class="statistic__data-title">Total categories</span>
+          <span class="statistic__data-number">{{ statistics.totalCategories }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <h3 class="main__heading-subtitle">Items list:</h3>
+      <table class="table dataTable">
+        <thead class="dataTable__header">
+          <tr>
+            <th
+              class="dataTable__header-title dataTable__header-title--id"
+              scope="col"
+            >
+              #
+            </th>
+            <th class="dataTable__header-title" scope="col">Name</th>
+            <th class="dataTable__header-title" scope="col">Category</th>
+            <th class="dataTable__header-title" scope="col">Quantity</th>
+            <th class="dataTable__header-title" scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody class="dataTable__body">
+          <tr
+            class="dataTable__body-row"
+            *ngFor="let item of items; index as i"
+          >
+            <th
+              class="dataTable__body-item dataTable__body-item--id"
+              scope="row"
+            >
+              {{ item._id }}
+            </th>
+            <td class="dataTable__body-item">{{ item.title }}</td>
+            <td class="dataTable__body-item">{{ item.category[0]?.title }}</td>
+            <td class="dataTable__body-item">{{ item.quantity }}</td>
+            <td class="dataTable__body-item">{{ item.price }} dzd</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="dataTable__illustration" *ngIf="this.items.length === 0">
+        <img src="assets/searching.svg" alt="no data found" />
+      </div>
+    </div>
+  </div>
+</div>
